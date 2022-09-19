@@ -2,6 +2,8 @@
 
 Viewer of [Prog Rock Stable](https://github.com/lowfuel/progrock-stable)
 
+![screenshot](https://user-images.githubusercontent.com/15027/191093774-4c8228b3-281c-426e-8b00-c371dd8ddea7.png)
+
 View images created through Prog Rock Stable (PRS).
 
 - Updates view as you generate images
