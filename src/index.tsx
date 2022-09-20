@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import Dir from "./dir";
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
 
 const getFiles = (set: React.Dispatch<React.SetStateAction<{}>>) => () => {
   return fetch("http://localhost:3000/files")
@@ -14,12 +16,7 @@ export type Files = {
 };
 
 function Index() {
-  const [files, setFiles] = useState<Files>({});
-
-  useEffect(() => {
-    getFiles(setFiles)();
-    setInterval(getFiles(setFiles), 5000);
-  }, []);
+  const files = useSelector((state: RootState) => state.files);
 
   return (
     <div style={{ display: "grid", margin: "4em" }}>
@@ -36,7 +33,7 @@ function Index() {
                 gridAutoFlow: "column",
               }}
             >
-              <Dir dir={dir} files={files[dir]} />
+              <Dir dir={dir}  />
             </div>
           </div>
         );

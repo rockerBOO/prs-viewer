@@ -60,6 +60,11 @@ const prsOut = "/mnt/900/builds/prs/out";
 
 In various front end JS files there are references to `localhost:3000`, so change those if you want a different server address.
 
+## Controls
+
+- `<esc>` close image modal
+- click on empty space on modal to close
+
 ## Future
 
 I plan on making this:

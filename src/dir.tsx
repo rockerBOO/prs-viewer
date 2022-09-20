@@ -6,53 +6,47 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { Files } from ".";
+import type { RootState } from "./store";
+import { useSelector } from "react-redux";
 
-type Comp = React.FC<{ dir: string; files: string[] }>;
+type Comp = React.FC<{ dir: string }>;
 
-const Dir: Comp = ({ dir, files }) => {
+const Dir: Comp = ({ dir }) => {
+  const files = useSelector((state: RootState) => state.files[dir]);
+  const images = files
+    .filter((f) => {
+      return /^.*\.png/.test(f);
+    })
+    .reverse()
+    .slice(0, 5);
+
+
+  if (images.length === 0) {
+    return <div>Empty</div>;
+  }
+
   return (
     <>
-      {files
-        .filter((f) => {
-          return /^.*\.png/.test(f);
-        })
-        .reverse()
-        .slice(0, 5)
-        .map((file) => {
-          return (
-            <img
-              key={file}
-              src={`http://localhost:3000/${dir}/${file}`}
-              width="100"
-            />
-          );
-        })}
+      {images.map((file) => {
+        return (
+          <img
+            key={file}
+            src={`http://localhost:3000/${dir}/${file}`}
+            width="100"
+          />
+        );
+      })}
     </>
   );
 };
 
-const getFilesInDir =
-  <T extends string[]>(set: React.Dispatch<React.SetStateAction<T>>) =>
-  (dir: string) =>
-  () => {
-    return fetch("http://localhost:3000/dir/" + dir)
-      .then((res) => res.json())
-      .then((files) => set(files));
-  };
-
 export const Dir2 = () => {
-  const [files, setFiles] = useState<string[]>([]);
-  const [currentFile, setCurrentFile] = useState<string | undefined>(undefined);
   let { dir } = useParams();
-
-  useEffect(() => {
-    if (!dir) {
-      return;
-    }
-    getFilesInDir(setFiles)(dir)();
-    setInterval(getFilesInDir(setFiles)(dir), 5000);
-  }, []);
+  const files = useSelector((state: RootState) =>
+    dir ? state.files[dir] ?? [] : []
+  );
+  // const [files, setFiles] = useState<string[]>([]);
+  const [currentFile, setCurrentFile] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     // next and previous
@@ -74,48 +68,46 @@ export const Dir2 = () => {
     };
   }, []);
 
+  const images = files
+    .filter((f) => {
+      return /^.*\.png/.test(f);
+    })
+    .reverse();
+
+  if (images.length === 0) {
+    return <div>Empty</div>;
+  }
+
   return (
     <>
       <Outlet />
-			<div className="blocks">
-        {files
-          .filter((f) => {
-            return /^.*\.png/.test(f);
-          })
-          .reverse()
-          .map((file) => {
-            return (
-              <div style={{ display: "grid", justifyItems: "center" }}>
-                <Link
-                  to={`/dir/${dir}/${file.replace(".png", "")}`}
-                  key={file}
-                  onClick={(e) => {
-                    setCurrentFile(e.target.href);
-                  }}
-                >
-                  <img
-                    src={`http://localhost:3000/${dir}/${file}`}
-                    width="256"
-                    data-json={`http://localhost:3000/${dir}/${file.replace(
-                      ".png",
-                      ".json"
-                    )}`}
-                    style={{ pointerEvents: "none" }}
-                    loading="lazy"
-                  />
-                </Link>
-              </div>
-            );
-          })}
+      <div className="blocks">
+        {images.map((file) => {
+          return (
+            <div key={file} style={{ display: "grid", justifyItems: "center" }}>
+              <Link
+                to={`/dir/${dir}/${file.replace(".png", "")}`}
+                onClick={(e) => {
+                  setCurrentFile((e.target as HTMLAnchorElement)?.href);
+                }}
+              >
+                <img
+                  src={`http://localhost:3000/${dir}/${file}`}
+                  width="256"
+                  data-json={`http://localhost:3000/${dir}/${file.replace(
+                    ".png",
+                    ".json"
+                  )}`}
+                  style={{ pointerEvents: "none" }}
+                  loading="lazy"
+                />
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </>
   );
-};
-
-const getFile = (dir) => (file) => (setSettings) => {
-  return fetch(`http://localhost:3000/settings/${dir}/${file}.json`)
-    .then((resp) => resp.json())
-    .then((json) => setSettings(json));
 };
 
 type Settings = {
@@ -146,8 +138,7 @@ export const File = () => {
       navigate(`/dir/${dir}`);
     };
 
-    const handlerClick = (e) => {
-      console.log(e.target);
+    const handlerClick = (e: MouseEvent) => {
       if (e.target === fileModal) {
         navigate(`/dir/${dir}`);
       }
@@ -163,7 +154,11 @@ export const File = () => {
   }, []);
 
   useEffect(() => {
-    getFile(dir)(file)(setSettings);
+    fetch(`http://localhost:3000/settings/${dir}/${file}.json`)
+      .then((resp) => resp.json())
+      .then((settings) => {
+        setSettings(settings);
+      });
   }, [file]);
 
   return (
