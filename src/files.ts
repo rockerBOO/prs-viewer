@@ -28,7 +28,7 @@ export const filesSlice = createSlice({
       action: PayloadAction<{ dir: string; file: string }[]>
     ) => {
       action.payload.forEach((data) => {
-				let dir = state[data["dir"]];
+        let dir = state[data["dir"]];
 
         if (dir) {
           dir.push(data["file"]);

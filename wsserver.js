@@ -35,12 +35,12 @@ const getAllFiles = () => {
       return files.map((file) => ({ dir, file }));
     })
     .reduce((acc, dir) => {
-			return [ ...acc, ...dir ];
+      return [...acc, ...dir];
     });
 };
 
 wss.on("connection", (ws) => {
-	const files = getAllFiles()
+  const files = getAllFiles();
   ws.send(JSON.stringify({ event: "addBatch", files: files }));
   chokidar.watch(prsOut, { ignoreInitial: true }).on("all", (event, path) => {
     const [, dir, file] = path.replace(prsOut, "").split("/");

@@ -12,7 +12,7 @@ import { Dir2, File } from "./dir";
 import App from "./app";
 import { Provider } from "react-redux";
 import "./main.css";
-import { add, addBatch} from "./files";
+import { add, addBatch } from "./files";
 
 const webSocket = new WebSocket("ws://localhost:8999");
 
@@ -21,7 +21,7 @@ webSocket.addEventListener("message", (ev: { data: string }) => {
     event: "add" | "addBatch";
     dir: string;
     file: string;
-		files: { dir: string, file: string }[]
+    files: { dir: string; file: string }[];
   };
 
   if (event === "addBatch") {
@@ -58,4 +58,3 @@ if (container) {
     </React.StrictMode>
   );
 }
-

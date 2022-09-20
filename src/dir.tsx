@@ -20,7 +20,6 @@ const Dir: Comp = ({ dir }) => {
     .reverse()
     .slice(0, 5);
 
-
   if (images.length === 0) {
     return <div>Empty</div>;
   }

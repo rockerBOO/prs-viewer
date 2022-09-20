@@ -33,7 +33,7 @@ function Index() {
                 gridAutoFlow: "column",
               }}
             >
-              <Dir dir={dir}  />
+              <Dir dir={dir} />
             </div>
           </div>
         );
