@@ -52,8 +52,8 @@ yarn wsserve
 ```
 
 - Client runs on `http://127.0.0.1:5173` (should also be presented in the output of the yarn dev)
-- Server runs on `http://localhost:3000`
-- Web socket server runs separately on `http://localhost:8999`
+- Server runs on `http://localhost:3000` for serving json and settings and images
+- Web socket server runs separately on `ws://localhost:8999` for file updates
 
 ## Configuration
 
