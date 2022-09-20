@@ -45,14 +45,21 @@ Start up server:
 yarn serve
 ```
 
-Client runs on `http://127.0.0.1:5173` (should also be presented in the output of the yarn dev)
-Server runs on `http://localhost:3000`
+Start up web socket server:
+
+```
+yarn wsserve
+```
+
+- Client runs on `http://127.0.0.1:5173` (should also be presented in the output of the yarn dev)
+- Server runs on `http://localhost:3000`
+- Web socket server runs separately on `http://localhost:8999`
 
 ## Configuration
 
 Most things are hard coded in the code.
 
-Change `index.js` to the directory your out files are for the server. See `out_dir` in `prs` `settings.json` to set this directory.
+Change `index.js` and `wsserver.js` to the directory your out files are for the server. See `out_dir` in `prs` `settings.json` to set this directory.
 
 ```
 const prsOut = "/mnt/900/builds/prs/out";
@@ -73,6 +80,7 @@ I plan on making this:
 - Swapping color schemes
 - Allowing different dimensions of images to be shown
 - Better performance when showing a lot of images
+- Allow both ws and http running on the same server code
 
 ## Thanks
 
