@@ -27,9 +27,11 @@ wss.on("connection", (ws) => {
     const [, dir, file] = path.replace(prsOut, "").split("/");
 
     ws.send(JSON.stringify({ event, dir, file }), (err) => {
-      console.log("error", err);
+      if (err) {
+        console.log("error", err);
+      }
     });
   });
 });
 
-console.log('Listening on ws://localhost:8999')
+console.log("Listening on ws://localhost:8999");

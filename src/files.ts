@@ -5,7 +5,10 @@ export interface Files {
   [key: string]: Dir;
 }
 
-export type Dir = string[];
+type FileName = string;
+
+export type Dir = FileName[];
+
 
 const initialState: Files = {};
 

@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  Link,
-  Outlet,
-  useLoaderData,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import type { RootState } from "./store";
 import { useSelector } from "react-redux";
+import { HTTP_HOST } from "./main";
 
 type Comp = React.FC<{ dir: string }>;
 
@@ -28,35 +23,90 @@ const Dir: Comp = ({ dir }) => {
     <>
       {images.map((file) => {
         return (
-          <img
-            key={file}
-            src={`http://localhost:3000/${dir}/${file}`}
-            width="100"
-          />
+          <img key={file} src={`${HTTP_HOST}/${dir}/${file}`} width="100" />
         );
       })}
     </>
   );
 };
 
+const findFileIter = (file: string): number | undefined => {
+  const match = file.match(/-(\d+)/);
+
+  if (match) {
+    return parseInt(match[1]);
+  }
+
+  return undefined;
+};
+
+//
+// const findFileName = (file: string): string | null => {
+//   const match = file.match(/.*-\d+/);
+//
+//   if (match) {
+//     return match[0];
+//   }
+//
+//   return null;
+// };
+
 export const Dir2 = () => {
   let { dir } = useParams();
-  const files = useSelector((state: RootState) =>
-    dir ? state.files[dir] ?? [] : []
-  );
-  // const [files, setFiles] = useState<string[]>([]);
-  const [currentFile, setCurrentFile] = useState<string | undefined>(undefined);
+  const { filesInDir, files, dirs } = useSelector((state: RootState) => ({
+    filesInDir: dir ? state.files[dir] ?? [] : [],
+    files: state.files,
+    dirs: Object.keys(state.files),
+    settings: state.settings ?? {},
+  }));
+  const [iter, setIter] = useState<number | undefined>(undefined);
+  const settings = useSelector((state: RootState) => {
+    return state.settings;
+  });
+  // const navigate = useNavigate();
+
+  // grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
 
   useEffect(() => {
-    // next and previous
-
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") {
-        setCurrentFile("armas/2");
+        // const x = files.find((file) => {
+        //   const found = findFileIter(file);
+        //
+        //   if (found && iter) {
+        //     return iter - 1 === found;
+        //   }
+        //
+        //   return false;
+        // });
+        //
+        // if (x) {
+        //   setIter(findFileIter(x));
+        //   const file = findFileName(x);
+        //   console.log("prev", file);
+        //   navigate(`/dir/${dir}/${file}`);
+        // }
       }
 
       if (e.key === "ArrowRight") {
-        setCurrentFile("armas/4");
+        // const x = files.find((file) => {
+        //   const found = findFileIter(file);
+        //
+        //   if (found && iter) {
+        //     return iter + 1 === found;
+        //   }
+        //
+        //   return false;
+        // });
+        //
+        // console.log("next", x);
+        //
+        // if (x) {
+        //   setIter(findFileIter(x));
+        //   const file = findFileName(x);
+        //   console.log("next", file);
+        //   navigate(`/dir/${dir}/${file}`);
+        // }
       }
     };
 
@@ -67,11 +117,18 @@ export const Dir2 = () => {
     };
   }, []);
 
-  const images = files
-    .filter((f) => {
-      return /^.*\.png/.test(f);
-    })
-    .reverse();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [dir, iter]);
+
+  const getLatest = (results: string[]): string[] =>
+    results
+      .filter((f) => {
+        return /^.*\.png/.test(f);
+      })
+      .reverse();
+
+  const images = getLatest(filesInDir as string[]);
 
   if (images.length === 0) {
     return <div>Empty</div>;
@@ -80,146 +137,78 @@ export const Dir2 = () => {
   return (
     <>
       <Outlet />
-      <div className="blocks">
+      <h1>{dir}</h1>
+      <section
+        className="blocks"
+        style={{
+          gridTemplateColumns: `repeat(auto-fit, minmax(${
+            settings["gallery_size"] ?? 256
+          }px, 1fr))`,
+          minHeight: "75vh",
+        }}
+      >
         {images.map((file) => {
           return (
-            <div key={file} style={{ display: "grid", justifyItems: "center" }}>
+            <div key={file} style={{ width: "100%" }}>
               <Link
-                to={`/dir/${dir}/${file.replace(".png", "")}`}
+                to={`/${dir}/${file
+                  .replace(".png", "")
+                  .replace(`${dir}-`, "")}`}
                 onClick={(e) => {
-                  setCurrentFile((e.target as HTMLAnchorElement)?.href);
+                  setIter(findFileIter((e.target as HTMLAnchorElement)?.href));
                 }}
               >
                 <img
-                  src={`http://localhost:3000/${dir}/${file}`}
-                  width="256"
-                  data-json={`http://localhost:3000/${dir}/${file.replace(
+                  src={`${HTTP_HOST}/${dir}/${file}`}
+                  data-json={`${HTTP_HOST}/${dir}/${file.replace(
                     ".png",
                     ".json"
                   )}`}
-                  style={{ pointerEvents: "none" }}
+                  style={{
+                    pointerEvents: "none",
+                    maxWidth: `${settings["gallery_size"] ?? 256}px`,
+                  }}
                   loading="lazy"
                 />
               </Link>
             </div>
           );
         })}
-      </div>
+      </section>
+      <footer>
+        <nav>
+          <ul>
+            {dirs.map((dir) => {
+              return (
+                <li key={dir}>
+                  <div className="blocks">
+                    <div>
+                      <Link to={`/${dir}`}>{dir}</Link>
+                    </div>
+                    {getLatest(files[dir])
+                      .slice(0, 1)
+                      .map((imageFile) => {
+                        return (
+                          <div key={imageFile}>
+                            <Link to={`/${dir}`} key={`${dir}/${imageFile}`}>
+                              <img
+                                src={`${HTTP_HOST}/${dir}/${imageFile}`}
+                                width="25"
+                                loading="lazy"
+                                style={{ width: 100 }}
+                              />
+                            </Link>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </footer>
     </>
-  );
-};
-
-type Settings = {
-  prompt?: string;
-  steps?: number;
-  scale?: number;
-  variance?: number;
-  seed?: number;
-  init_strength?: number;
-  width?: number;
-  height?: number;
-  n_iter?: number;
-  method?: string;
-};
-
-export const File = () => {
-  const { dir, file } = useParams();
-  const navigate = useNavigate();
-  const [settings, setSettings] = useState<Settings>({});
-
-  useEffect(() => {
-    const fileModal = document.getElementById("file-modal");
-    const handler = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") {
-        return;
-      }
-
-      navigate(`/dir/${dir}`);
-    };
-
-    const handlerClick = (e: MouseEvent) => {
-      if (e.target === fileModal) {
-        navigate(`/dir/${dir}`);
-      }
-    };
-
-    document.body.addEventListener("keyup", handler);
-    fileModal?.addEventListener("click", handlerClick);
-
-    return function cleanup() {
-      document.body.removeEventListener("keyup", handler);
-      fileModal?.removeEventListener("click", handlerClick);
-    };
-  }, []);
-
-  useEffect(() => {
-    fetch(`http://localhost:3000/settings/${dir}/${file}.json`)
-      .then((resp) => resp.json())
-      .then((settings) => {
-        setSettings(settings);
-      });
-  }, [file]);
-
-  return (
-    <div className="modal" id="file-modal">
-      <div
-        style={{
-          display: "grid",
-          justifyItems: "center",
-          pointerEvents: "none",
-        }}
-      >
-        <div
-          style={{
-            maxHeight: "80vh",
-            maxWidth: "80vw",
-            display: "grid",
-            justifyItems: "center",
-          }}
-        >
-          <img
-            src={`http://localhost:3000/${dir}/${file}.png`}
-            style={{
-              maxHeight: "100%",
-              maxWidth: "100%",
-
-              pointerEvents: "all",
-            }}
-          />
-        </div>
-        <div
-          style={{
-            pointerEvents: "all",
-            padding: "1em",
-            maxWidth: "75vw",
-            textAlign: "center",
-          }}
-        >
-          {settings?.prompt ?? "Prompt"}
-        </div>
-        <div
-          style={{
-            pointerEvents: "all",
-            padding: ".3em",
-            opacity: 0.5,
-          }}
-        >
-          {settings?.steps ?? "-"} {settings?.scale} {settings?.variance}{" "}
-          {settings?.seed} {settings?.init_strength?.toPrecision(3)}
-        </div>
-        <div
-          style={{
-            pointerEvents: "all",
-            padding: ".3em",
-
-            opacity: 0.5,
-          }}
-        >
-          {settings?.width ?? "-"} {settings?.height} {settings?.n_iter}{" "}
-          {settings?.method}
-        </div>
-      </div>
-    </div>
   );
 };
 

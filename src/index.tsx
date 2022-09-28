@@ -4,9 +4,10 @@ import { Link, Outlet } from "react-router-dom";
 import Dir from "./dir";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
+import { HTTP_HOST } from "./main";
 
 const getFiles = (set: React.Dispatch<React.SetStateAction<{}>>) => () => {
-  return fetch("http://localhost:3000/files")
+  return fetch(`${HTTP_HOST}/files`)
     .then((res) => res.json())
     .then((files) => set(files));
 };
@@ -19,18 +20,35 @@ function Index() {
   const files = useSelector((state: RootState) => state.files);
 
   return (
-    <div style={{ display: "grid", margin: "4em" }}>
+    <section
+      style={{
+        display: "grid",
+        width: "100%",
+        maxWidth: "90vw",
+        justifyContent: "center",
+        gridGap: "8em 4vw",
+				margin: "10vh 4vw"
+      }}
+    >
       {Object.keys(files).map((dir) => {
         return (
-          <div key={dir}>
-            <h2>
-              <Link to={`/dir/${dir}`}>{dir}</Link>
+          <div
+            key={dir}
+            style={{
+              justifyContent: "center",
+              width: "90vw",
+              maxWidth: "100%",
+            }}
+          >
+            <h2 style={{ textAlign: "center" }}>
+              <Link to={`/${dir}`}>{dir}</Link>
             </h2>
             <div
               style={{
                 display: "grid",
-                gridGap: ".3em",
+                gridGap: "4vw",
                 gridAutoFlow: "column",
+                justifyContent: "center",
               }}
             >
               <Dir dir={dir} />
@@ -39,7 +57,7 @@ function Index() {
         );
       })}
       <Outlet />
-    </div>
+    </section>
   );
 }
 

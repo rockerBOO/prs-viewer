@@ -8,13 +8,21 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import { store } from "./store";
-import { Dir2, File } from "./dir";
+import { Dir2 } from "./dir";
+import { File } from "./file";
 import App from "./app";
 import { Provider } from "react-redux";
 import "./main.css";
 import { add, addBatch } from "./files";
 
-const webSocket = new WebSocket("ws://localhost:8999");
+// Configure your endpoints
+export const HTTP_HOST = "http://localhost:3000";
+export const WS_HOST = "ws://localhost:8999";
+
+// Web socket connection
+// -=-=-=-=-=-=-=-=-=-=-
+
+const webSocket = new WebSocket(WS_HOST);
 
 webSocket.addEventListener("message", (ev: { data: string }) => {
   const { event, dir, file, files } = JSON.parse(ev.data) as {
@@ -31,14 +39,13 @@ webSocket.addEventListener("message", (ev: { data: string }) => {
   }
 });
 
-// store.subscribe((state) => {
-// 	console.log(store.getState())
-// })
+// Routing
+// -=-=-=-=-=-=-=-=-=-=-
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="dir/:dir" element={<Dir2 />}>
+      <Route path=":dir" element={<Dir2 />}>
         <Route path=":file" element={<File />} />
       </Route>
       <Route path="/" element={<Index />} />
@@ -57,4 +64,6 @@ if (container) {
       </Provider>
     </React.StrictMode>
   );
+} else {
+  console.error("Could not find the root container to attach React to");
 }

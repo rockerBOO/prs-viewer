@@ -1,3 +1,7 @@
+::selection {
+  background-color: #0f6c71;
+}
+
 body {
   background-color: black;
   color: white;
@@ -20,14 +24,52 @@ body {
 .blocks {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(256px, 1fr));
   width: 100%;
-  grid-gap: 4em;
-  margin: 4em 0;
+  max-width: 85vw;
+  margin: 4vh 0;
+  grid-gap: 10vh 4vw;
+  justify-items: center;
+  transition: 1s all ease-in-out;
 }
 
 .blocks > * {
   width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.blocks img {
+  object-fit: scale-down;
+  max-width: 256px;
+  max-height: 75vh;
+  transition: 400ms all ease-out;
+}
+
+.blocks a {
+  transition: all 256ms ease-in-out;
+  /* transform: scale(1); */
+}
+
+.blocks a:hover,
+.blocks a:focus-within {
+  /* transform: scale(1.2); */
+}
+
+main {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+}
+
+main header {
+  display: grid;
+  justify-items: center;
+}
+
+main header nav {
+  display: grid;
+  justify-items: center;
 }
 
 .modal {
@@ -40,4 +82,58 @@ body {
   justify-content: center;
   align-items: center;
   background-color: hsla(175, 0%, 0%, 0.95);
+}
+
+footer {
+  margin: 20vh 0;
+}
+
+footer ul {
+  padding: 0;
+  max-width: 80vw;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+  grid-auto-flow: rows;
+  justify-content: center;
+  grid-gap: 4vw;
+  text-align: center;
+}
+
+footer li {
+  list-style: none;
+}
+
+footer li div.blocks {
+  margin: 1em 0;
+  grid-gap: 1em;
+}
+
+footer li {
+  opacity: 0.4;
+  transition: 256ms all ease-in-out;
+  transform: scale(1);
+}
+footer li:hover,
+footer li:focus-within {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+button {
+  background-color: black;
+  border: 2px solid black;
+  font-family: monospace;
+	min-height: 2em;
+	min-width: 6em;
+  transition: 256ms ease-in-out all;
+  font-size: 1em;
+  outline: 0px solid white;
+	color: #444;
+}
+
+button:hover,
+button:focus {
+  outline: 3px solid white;
+  cursor: pointer;
+	color: white;
 }

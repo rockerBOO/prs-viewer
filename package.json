@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "node index.js",
-    "wsserve": "node wsserve.js"
+    "wsserve": "node wsserver.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.5",
