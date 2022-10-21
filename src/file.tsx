@@ -23,11 +23,9 @@ export const File = () => {
   useEffect(() => {
     const fileModal = document.getElementById("file-modal");
     const handler = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") {
-        return;
+      if (e.key === "Escape") {
+        navigate(`/${dir}`);
       }
-
-      navigate(`/${dir}`);
     };
 
     const handlerClick = (e: MouseEvent) => {
@@ -57,7 +55,12 @@ export const File = () => {
     <div
       className="modal"
       id="file-modal"
-      style={{ transition: "all 256ms ease-in-all", transform: "scale(1)" }}
+      style={{
+        transition: "all 256ms ease-in-all",
+        transform: "scale(1)",
+
+        animation: "520ms fadein",
+      }}
     >
       <div
         style={{
@@ -101,8 +104,10 @@ export const File = () => {
             opacity: 0.5,
           }}
         >
-          {settings?.steps ?? "-"} {settings?.scale} {settings?.variance}{" "}
-          {settings?.seed} {settings?.init_strength?.toPrecision(3)}
+          <span>
+            {settings?.steps ?? "-"} {settings?.scale} {settings?.variance}
+            {settings?.seed} {settings?.init_strength?.toPrecision(3)}
+          </span>
         </div>
         <div
           style={{
@@ -112,8 +117,10 @@ export const File = () => {
             opacity: 0.5,
           }}
         >
-          {settings?.width ?? "-"} {settings?.height} {settings?.n_iter}{" "}
-          {settings?.method}
+          <span>
+            {settings?.width ?? "-"} {settings?.height} {settings?.n_iter}
+            {settings?.method}
+          </span>
         </div>
       </div>
     </div>

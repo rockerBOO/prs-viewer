@@ -23,11 +23,11 @@ body {
 
 .blocks {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
   width: 100%;
   max-width: 85vw;
-  margin: 4vh 0;
-  grid-gap: 10vh 4vw;
+  margin: 15vh 0;
+  grid-gap: 20vh 10vw;
   justify-items: center;
   transition: 1s all ease-in-out;
 }
@@ -41,9 +41,39 @@ body {
 
 .blocks img {
   object-fit: scale-down;
-  max-width: 256px;
   max-height: 75vh;
   transition: 400ms all ease-out;
+  animation: 2s fadein, 1.5s scalein;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    filter: blur(32px);
+  }
+
+  50% {
+    filter: blur(1px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes scalein {
+  from {
+    transform: scale(0.8);
+  }
+
+  25% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 .blocks a {
@@ -82,6 +112,7 @@ main header nav {
   justify-content: center;
   align-items: center;
   background-color: hsla(175, 0%, 0%, 0.95);
+  cursor: pointer;
 }
 
 footer {
@@ -123,17 +154,17 @@ button {
   background-color: black;
   border: 2px solid black;
   font-family: monospace;
-	min-height: 2em;
-	min-width: 6em;
+  min-height: 2em;
+  min-width: 6em;
   transition: 256ms ease-in-out all;
   font-size: 1em;
   outline: 0px solid white;
-	color: #444;
+  color: #444;
 }
 
 button:hover,
 button:focus {
   outline: 3px solid white;
   cursor: pointer;
-	color: white;
+  color: white;
 }

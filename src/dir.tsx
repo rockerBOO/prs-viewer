@@ -23,7 +23,7 @@ const Dir: Comp = ({ dir }) => {
     <>
       {images.map((file) => {
         return (
-          <img key={file} src={`${HTTP_HOST}/${dir}/${file}`} width="100" />
+					<img key={file} src={`${HTTP_HOST}/${dir}/${file}`} width="100" style={{ animation: "1s fadein" }} />
         );
       })}
     </>
@@ -166,7 +166,7 @@ export const Dir2 = () => {
                   )}`}
                   style={{
                     pointerEvents: "none",
-                    maxWidth: `${settings["gallery_size"] ?? 256}px`,
+                    maxWidth: `100%`,
                   }}
                   loading="lazy"
                 />

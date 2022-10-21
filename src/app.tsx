@@ -9,12 +9,10 @@ const Settings = () => {
   });
   const dispatch = useDispatch();
 
-	console.log(settings)
-
   return (
     <button
       onClick={() => {
-				dispatch(set({ gallery_size: settings.gallery_size ? settings.gallery_size === 512 ? 256 : 512 : 512 }));
+				dispatch(set({ gallery_size: settings.gallery_size ? settings.gallery_size === 1024 ? 256 : 1024 : 1024 }));
       }}
 			style={{ position: 'fixed', top: '1em', right: '1em' }}
     >
