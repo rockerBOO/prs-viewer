@@ -1,30 +1,59 @@
 import chokidar from "chokidar";
-import { readdirSync } from "fs";
+import { readdirSync, statSync } from "node:fs";
+import { readdir } from "node:fs/promises";
 import { WebSocketServer } from "ws";
+import { env } from "node:process";
 
-const wss = new WebSocketServer({ port: 8999 });
+const LISTENING_PORT = env.PRS_VIEWER_WSSERVE_PORT ?? 8999;
+const PRS_OUT = env.PRS_VIEWER_OUT ?? "/mnt/900/builds/prs/out";
 
-const prsOut = "/mnt/900/builds/prs/out";
+const isDirectory = (path) => {
+  const stats = statSync(path);
 
-const getAllFiles = () => {
-  const dirs = readdirSync(prsOut);
+  return stats.isDirectory();
+};
+
+const wss = new WebSocketServer({ port: LISTENING_PORT });
+
+async function getAllFiles() {
+  const dirs = await readdir(PRS_OUT);
+
+  console.log(`collections: ${dirs.length}`);
 
   return dirs
     .map((dir) => {
-      const files = readdirSync(`${prsOut}/${dir}`);
-      return files.map((file) => ({ dir, file }));
-    })
-    .reduce((acc, dir) => {
-      return [...acc, ...dir];
-    });
-};
+      try {
+        const try_dir = `${PRS_OUT}/${dir}`;
+        const isDir = isDirectory(try_dir);
+        if (!isDir) {
+          return undefined;
+        }
+        const files = readdirSync(try_dir);
 
-wss.on("connection", (ws) => {
-  const files = getAllFiles();
+        console.log(`${dir}: ${files.length}`);
+        return files.map((file) => ({ dir, file }));
+      } catch (err) {
+        console.error(err);
+        return undefined;
+      }
+    })
+    .filter((a) => a)
+    .reduce(async (acc, dir) => {
+      return [...acc, ...dir];
+    }, []);
+}
+
+wss.on("connection", async (ws) => {
+  const files = await getAllFiles();
   ws.send(JSON.stringify({ event: "addBatch", files: files }));
 
-  chokidar.watch(prsOut, { ignoreInitial: true }).on("all", (event, path) => {
-    const [, dir, file] = path.replace(prsOut, "").split("/");
+  chokidar.watch(PRS_OUT, { ignoreInitial: true }).on("all", (event, path) => {
+    // Only handle png files, drop the json
+    if (path.substring(path.length - 3) !== "png") {
+      return;
+    }
+
+    const [, dir, file] = path.replace(PRS_OUT, "").split("/");
 
     ws.send(JSON.stringify({ event, dir, file }), (err) => {
       if (err) {
@@ -34,4 +63,5 @@ wss.on("connection", (ws) => {
   });
 });
 
-console.log("Listening on ws://localhost:8999");
+console.log(`Watching for changes to ${PRS_OUT}`);
+console.log(`Listening on ws://localhost:${LISTENING_PORT}`);

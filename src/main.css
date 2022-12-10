@@ -7,6 +7,7 @@ body {
   color: white;
   margin: 0;
   font-family: monospace;
+	font-size: 1rem;
 }
 
 a {
@@ -49,16 +50,16 @@ body {
 @keyframes fadein {
   from {
     opacity: 0;
-    filter: blur(32px);
+    filter: blur(24px) saturate(0%);
   }
 
   50% {
-    filter: blur(1px);
+    filter: blur(1px) saturate(100%);
   }
 
   100% {
     opacity: 1;
-    filter: blur(0px);
+    filter: blur(0px) saturate(100%);
   }
 }
 
@@ -140,7 +141,7 @@ footer li div.blocks {
 }
 
 footer li {
-  opacity: 0.4;
+  opacity: 0.8;
   transition: 256ms all ease-in-out;
   transform: scale(1);
 }

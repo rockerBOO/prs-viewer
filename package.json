@@ -34,6 +34,7 @@
     "eslint": "^8.23.1",
     "eslint-plugin-react": "^7.31.8",
     "prettier_d_slim": "^1.2.0",
+    "rome": "^10.0.0",
     "vite": "^3.1.2"
   },
   "packageManager": "yarn@3.2.3"

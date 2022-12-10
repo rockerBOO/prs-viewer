@@ -61,8 +61,15 @@ Most things are hard coded in the code.
 
 Change `index.js` and `wsserver.js` to the directory your out files are for the server. See `out_dir` in `prs` `settings.json` to set this directory.
 
+```sh
+PRS_VIEWER_OUT=/home/mine/prs/out yarn serve
+PRS_VIEWER_OUT=/home/mine/prs/out yarn wsserve
 ```
-const prsOut = "/mnt/900/builds/prs/out";
+
+Set the port for the web socket server.
+
+```
+PRS_VIEWER_WSSERVE_PORT=8999
 ```
 
 In various front end JS files there are references to `localhost:3000`, so change those if you want a different server address.
