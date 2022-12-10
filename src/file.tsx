@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { HTTP_HOST } from "./main";
 
+// IDEA
+// For configuring location of images and directories
+// Need to be able to configure the format in which 
+// the names are assembled. Maybe we make functions 
+// that can be defaulted and then people could make their own
+//
+
 type Settings = {
 	prompt?: string;
 	steps?: number;
@@ -46,7 +53,7 @@ export const File = () => {
 	}, []);
 
 	useEffect(() => {
-		fetch(`${HTTP_HOST}/settings/${dir}/${dir}-${file}.json`)
+		fetch(`${HTTP_HOST}/settings/${dir}/${file}.json`)
 			.then((resp) => resp.json())
 			.then((settings) => {
 				setSettings(settings);
@@ -80,7 +87,7 @@ export const File = () => {
 					}}
 				>
 					<img
-						src={`${HTTP_HOST}/${dir}/${dir}-${file}.png`}
+						src={`${HTTP_HOST}/${dir}/${file}.png`}
 						style={{
 							maxHeight: "100%",
 							maxWidth: "100%",

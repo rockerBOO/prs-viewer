@@ -4,7 +4,7 @@ import cors from "cors";
 import pkg from "really-relaxed-json";
 const { toJson } = pkg;
 import { env } from "node:process";
-import { readdir } from "node:fs/promises"
+import { readdir, readFile } from "node:fs/promises";
 
 // Set to the output directory
 // PRS_VIEWER_OUT=~/stablediffusion/outputs/txt2img-samples
@@ -39,22 +39,21 @@ app.get("/files", (_req, res) => {
 });
 
 app.get("/dir/:dir", (req, res) => {
-  const dir = req.params["dir"];
-  const files = fs.readdirSync(`${PRS_OUT}/${dir}`);
-
-  res.json(files);
+  readdir(`${PRS_OUT}/${req.params["dir"]}`).then((files) => {
+    res.json(files);
+  });
 });
 
 app.get("/settings/:dir/:file", (req, res) => {
-  const dir = req.params["dir"];
-  const file = req.params["file"];
-  const filepath = `${PRS_OUT}/${dir}/${file}`;
+  const filepath = `${PRS_OUT}/${req.params["dir"]}/${req.params["file"]}`;
   if (!fs.existsSync(filepath)) {
     console.log(`404 ${filepath}`);
     return;
   }
-  const settings = fs.readFileSync(filepath);
-  res.json(JSON.parse(toJson(settings.toString())));
+
+  readFile(filepath).then((settings) => {
+    res.json(JSON.parse(toJson(settings.toString())));
+  });
 });
 
 app.listen(PRS_HTTP_PORT);

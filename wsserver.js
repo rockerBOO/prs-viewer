@@ -47,20 +47,26 @@ wss.on("connection", async (ws) => {
   const files = await getAllFiles();
   ws.send(JSON.stringify({ event: "addBatch", files: files }));
 
-  chokidar.watch(PRS_OUT, { ignoreInitial: true }).on("all", (event, path) => {
-    // Only handle png files, drop the json
-    if (path.substring(path.length - 3) !== "png") {
-      return;
-    }
-
-    const [, dir, file] = path.replace(PRS_OUT, "").split("/");
-
-    ws.send(JSON.stringify({ event, dir, file }), (err) => {
-      if (err) {
-        console.log("error", err);
+  chokidar
+    .watch(PRS_OUT, {
+      ignored: "*.json",
+      ignoreInitial: true,
+      awaitWriteFinish: { stabilityThreshold: 1000 },
+    })
+    .on("all", (event, path) => {
+      // Only handle png files, drop the json
+      if (path.substring(path.length - 3) !== "png") {
+        return;
       }
+
+      const [, dir, file] = path.replace(PRS_OUT, "").split("/");
+
+      ws.send(JSON.stringify({ event, dir, file }), (err) => {
+        if (err) {
+          console.log("error", err);
+        }
+      });
     });
-  });
 });
 
 console.log(`Watching for changes to ${PRS_OUT}`);
