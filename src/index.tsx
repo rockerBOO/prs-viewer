@@ -51,7 +51,13 @@ function Index() {
 								justifyContent: "center",
 							}}
 						>
-							<Dir dir={dir} />
+							<Dir
+								dir={dir}
+								files={files[dir].slice(
+									files[dir].length - 5,
+									files[dir].length,
+								)}
+							/>
 						</div>
 					</div>
 				);
@@ -62,3 +68,4 @@ function Index() {
 }
 
 export default Index;
+

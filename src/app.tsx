@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
+import { getFilePath } from "./lib";
 import { set } from "./settings";
 import { RootState } from "./store";
 
@@ -30,6 +32,7 @@ const Settings = () => {
 };
 
 const App = () => {
+
 	return (
 		<main>
 			<header>
@@ -45,3 +48,4 @@ const App = () => {
 };
 
 export default App;
+

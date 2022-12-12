@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import express from "express";
 import fs from "node:fs";
 import cors from "cors";
@@ -6,14 +8,19 @@ const { toJson } = pkg;
 import { env } from "node:process";
 import { readdir, readFile } from "node:fs/promises";
 
+import yargs from "yargs/yargs";
+import { hideBin } from "yargs/helpers";
+
+const argv = yargs(hideBin(process.argv)).argv;
+
 // Set to the output directory
 // PRS_VIEWER_OUT=~/stablediffusion/outputs/txt2img-samples
-const PRS_OUT = env.PRS_VIEWER_OUT ?? "/mnt/900/builds/prs/out";
+const PRS_OUT = argv.out ?? env.PRS_VIEWER_OUT ?? "/mnt/900/builds/prs/out";
 
 // Set the listening port of the HTTP server for the REST API
 // and image delivery
 // PRS_HTTP_PORT=3000
-const PRS_HTTP_PORT = env.PRS_HTTP_PORT ?? 3000;
+const PRS_HTTP_PORT = argv.port ?? env.PRS_HTTP_PORT ?? 3000;
 
 const app = express();
 
@@ -58,4 +65,4 @@ app.get("/settings/:dir/:file", (req, res) => {
 
 app.listen(PRS_HTTP_PORT);
 
-console.log("Listening on http://localhost:3000");
+console.log(`Listening on http://localhost:${PRS_HTTP_PORT}`);

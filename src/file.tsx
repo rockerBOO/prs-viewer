@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { GetPath, getFilePath } from "./lib";
+import { getFilePath as prs_getFilePath, getSettingsPath as prs_getSettingPath } from "./prs";
 import { HTTP_HOST } from "./main";
 
 // IDEA
 // For configuring location of images and directories
-// Need to be able to configure the format in which 
-// the names are assembled. Maybe we make functions 
+// Need to be able to configure the format in which
+// the names are assembled. Maybe we make functions
 // that can be defaulted and then people could make their own
 //
 
@@ -28,6 +30,8 @@ export const File = () => {
 	const { dir, file } = useParams();
 	const navigate = useNavigate();
 	const [settings, setSettings] = useState<Settings>({});
+	const [filePath, setFilePath] = useState<GetPath>(() => prs_getFilePath);
+	const [settingPath, setSettingPath] = useState<GetPath>(() => prs_getSettingPath);
 
 	useEffect(() => {
 		const fileModal = document.getElementById("file-modal");
@@ -53,12 +57,22 @@ export const File = () => {
 	}, []);
 
 	useEffect(() => {
-		fetch(`${HTTP_HOST}/settings/${dir}/${file}.json`)
+		fetch(`${HTTP_HOST}/settings/${dir}/${dir}-${file}.json`)
 			.then((resp) => resp.json())
 			.then((settings) => {
 				setSettings(settings);
 			});
 	}, [file]);
+
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+
+		if (urlParams.has("type")) {
+			if (urlParams.get("type") === "prs") {
+				setFilePath(prs_getFilePath);
+			}
+		}
+	}, []);
 
 	return (
 		<div
@@ -87,7 +101,7 @@ export const File = () => {
 					}}
 				>
 					<img
-						src={`${HTTP_HOST}/${dir}/${file}.png`}
+						src={filePath({ dir, file })}
 						style={{
 							maxHeight: "100%",
 							maxWidth: "100%",
@@ -116,7 +130,8 @@ export const File = () => {
 				>
 					<span>
 						{settings?.steps ?? "-"} {settings?.scale} {settings?.variance}{" "}
-						{settings?.seed} {settings?.init_strength?.toPrecision(3)} {settings?.init_image}
+						{settings?.seed} {settings?.init_strength?.toPrecision(3)}{" "}
+						{settings?.init_image}
 					</span>
 				</div>
 				<div

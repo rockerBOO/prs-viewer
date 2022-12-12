@@ -8,12 +8,12 @@ import {
 	createRoutesFromElements,
 } from "react-router-dom";
 import { store } from "./store";
-import { Dir2 } from "./dir";
 import { File } from "./file";
 import App from "./app";
 import { Provider } from "react-redux";
 import "./main.css";
 import { add, addBatch } from "./files";
+import DirPage from "./page/dir_index";
 
 // Configure your endpoints
 export const HTTP_HOST = "http://localhost:3000";
@@ -45,7 +45,7 @@ webSocket.addEventListener("message", (ev: { data: string }) => {
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route path="/" element={<App />}>
-			<Route path=":dir" element={<Dir2 />}>
+			<Route path=":dir" element={<DirPage />}>
 				<Route path=":file" element={<File />} />
 			</Route>
 			<Route path="/" element={<Index />} />
@@ -67,3 +67,4 @@ if (container) {
 } else {
 	console.error("Could not find the root container to attach React to");
 }
+
