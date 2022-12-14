@@ -3,8 +3,8 @@
 import express from "express";
 import fs from "node:fs";
 import cors from "cors";
-import pkg from "really-relaxed-json";
-const { toJson } = pkg;
+// import pkg from "really-relaxed-json";
+import jsonic from "jsonic" 
 import { env } from "node:process";
 import { readdir, readFile } from "node:fs/promises";
 
@@ -59,7 +59,7 @@ app.get("/settings/:dir/:file", (req, res) => {
   }
 
   readFile(filepath).then((settings) => {
-    res.json(JSON.parse(toJson(settings.toString())));
+    res.json(jsonic(settings.toString()));
   });
 });
 

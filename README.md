@@ -4,7 +4,7 @@ Viewer of [Prog Rock Stable](https://github.com/lowfuel/progrock-stable)
 
 ![screenshot](https://user-images.githubusercontent.com/15027/191093774-4c8228b3-281c-426e-8b00-c371dd8ddea7.png)
 
-View images created through Prog Rock Stable (PRS).
+View images created through Prog Rock Stable (PRS). Working towards generic stable diffusion viewer from the various SD output configurations.
 
 - Updates view as you generate images
 - Access settings via settings JSON for each image
@@ -57,22 +57,36 @@ yarn wsserve
 
 ## Configuration
 
-Most things are hard coded in the code.
-
-Change `index.js` and `wsserver.js` to the directory your out files are for the server. See `out_dir` in `prs` `settings.json` to set this directory.
+You can configure the out directories and ports for the wsserver and httpserver to allow you to
+run multiple servers on the same computer.
 
 ```sh
 PRS_VIEWER_OUT=/home/mine/prs/out yarn serve
 PRS_VIEWER_OUT=/home/mine/prs/out yarn wsserve
 ```
 
-Set the port for the web socket server.
+And/or set the port for the web socket server.
 
-```
+```sh
 PRS_VIEWER_WSSERVE_PORT=8999
 ```
 
-In various front end JS files there are references to `localhost:3000`, so change those if you want a different server address.
+Or pass as arguments
+
+```sh
+yarn wsserve --out /path/to/my/outputs --port 8999
+yarn serve --out /path/to/my/outputs --port 3000
+```
+
+And can set the frontend to use these new endpoints. Can also be hosted elsewhere and
+have a static frontend (no need to run in development or make new builds when you change endpoints)
+
+```
+http://localhost:5173/analog?wshost=localhost:9000&httphost=localhost:3000
+```
+
+This sets the values on load, so if you reload you'll need these values set again. Ideally we save the configuration to
+local storage, so it stays consistent but then requires an easy way to reset it if required.
 
 ## Controls
 

@@ -7,12 +7,16 @@ import { env, exit } from "node:process";
 
 import yargs from "yargs/yargs";
 import { hideBin } from "yargs/helpers";
-const args = yargs(hideBin(process.argv))
-  .describe("port", "port to listen on")
-  .describe("out", "directory with the output from the diffusion")
-  .alias("h", "help")
-  .parse();
-const argv = args.argv;
+// const args = yargs(hideBin(process.argv))
+//   .describe("port", "port to listen on")
+//   .describe("out", "directory with the output from the diffusion")
+//   .alias("h", "help")
+//   .parse();
+// const argv = args.argv;
+
+const argv = yargs(hideBin(process.argv)).argv;
+
+console.log(argv);
 
 const LISTENING_PORT = argv?.port ?? env.PRS_VIEWER_WSSERVE_PORT ?? 8999;
 const PRS_OUT = argv?.out ?? env.PRS_VIEWER_OUT ?? "/mnt/900/builds/prs/out";

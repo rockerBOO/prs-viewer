@@ -14,30 +14,54 @@ import { Provider } from "react-redux";
 import "./main.css";
 import { add, addBatch } from "./files";
 import DirPage from "./page/dir_index";
+import { getHTTPHost, getWSHost } from "./lib";
 
 // Configure your endpoints
-export const HTTP_HOST = "http://localhost:3000";
-export const WS_HOST = "ws://localhost:8999";
+export const HTTP_HOST = getHTTPHost();
+export const WS_HOST = getWSHost();
 
 // Web socket connection
 // -=-=-=-=-=-=-=-=-=-=-
 
-const webSocket = new WebSocket(WS_HOST);
+try {
+	const webSocket = new WebSocket(WS_HOST);
+	let isProbablyConnected = false;
 
-webSocket.addEventListener("message", (ev: { data: string }) => {
-	const { event, dir, file, files } = JSON.parse(ev.data) as {
-		event: "add" | "addBatch" | "change";
-		dir: string;
-		file: string;
-		files: { dir: string; file: string }[];
-	};
+	webSocket.addEventListener("error", (ev) => {
+		console.log("had an error with the websocket");
+		console.log(ev);
+	});
 
-	if (event === "addBatch") {
-		store.dispatch(addBatch(files));
-	} else if (event === "add") {
-		store.dispatch(add({ dir: dir, file: file }));
-	}
-});
+	webSocket.addEventListener("open", (ev) => {
+		isProbablyConnected = true;
+	});
+
+	webSocket.addEventListener("close", (ev) => {
+		isProbablyConnected = false;
+
+		if (ev.wasClean === false) {
+			console.error("We did not cleanly close from the websocket server.");
+			console.log("Might be an issue with the connection or the server.");
+		}
+	});
+
+	webSocket.addEventListener("message", (ev: { data: string }) => {
+		const { event, dir, file, files } = JSON.parse(ev.data) as {
+			event: "add" | "addBatch" | "change";
+			dir: string;
+			file: string;
+			files: { dir: string; file: string }[];
+		};
+
+		if (event === "addBatch") {
+			store.dispatch(addBatch(files));
+		} else if (event === "add") {
+			store.dispatch(add({ dir: dir, file: file }));
+		}
+	});
+} catch (err) {
+	console.error('Could not connect to the web socket server');
+};
 
 // Routing
 // -=-=-=-=-=-=-=-=-=-=-
