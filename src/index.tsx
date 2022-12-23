@@ -7,65 +7,64 @@ import { RootState } from "./store";
 import { HTTP_HOST } from "./main";
 
 const getFiles = (set: React.Dispatch<React.SetStateAction<{}>>) => () => {
-	return fetch(`${HTTP_HOST}/files`)
-		.then((res) => res.json())
-		.then((files) => set(files));
+  return fetch(`${HTTP_HOST}/files`)
+    .then((res) => res.json())
+    .then((files) => set(files));
 };
 
 export type Files = {
-	[key: string]: string[];
+  [key: string]: string[];
 };
 
 function Index() {
-	const files = useSelector((state: RootState) => state.files);
+  const files = useSelector((state: RootState) => state.files);
 
-	return (
-		<section
-			style={{
-				display: "grid",
-				width: "100%",
-				maxWidth: "90vw",
-				justifyContent: "center",
-				gridGap: "8em 4vw",
-				margin: "10vh 4vw",
-			}}
-		>
-			{Object.keys(files).map((dir) => {
-				return (
-					<div
-						key={dir}
-						style={{
-							justifyContent: "center",
-							width: "90vw",
-							maxWidth: "100%",
-						}}
-					>
-						<h2 style={{ textAlign: "center" }}>
-							<Link to={`/${dir}`}>{dir}</Link>
-						</h2>
-						<div
-							style={{
-								display: "grid",
-								gridGap: "4vw",
-								gridAutoFlow: "column",
-								justifyContent: "center",
-							}}
-						>
-							<Dir
-								dir={dir}
-								files={files[dir].slice(
-									files[dir].length - 5,
-									files[dir].length,
-								)}
-							/>
-						</div>
-					</div>
-				);
-			})}
-			<Outlet />
-		</section>
-	);
+  return (
+    <section
+      style={{
+        display: "grid",
+        width: "100%",
+        maxWidth: "90vw",
+        justifyContent: "center",
+        gridGap: "8em 4vw",
+        margin: "10vh 4vw",
+      }}
+    >
+      {Object.keys(files).map((dir) => {
+        return (
+          <div
+            key={dir}
+            style={{
+              justifyContent: "center",
+              width: "90vw",
+              maxWidth: "100%",
+            }}
+          >
+            <h2 style={{ textAlign: "center" }}>
+              <Link to={`/${dir}`}>{dir}</Link>
+            </h2>
+            <div
+              style={{
+                display: "grid",
+                gridGap: "4vw",
+                gridAutoFlow: "column",
+                justifyContent: "center",
+              }}
+            >
+              <Dir
+                dir={dir}
+                files={files[dir].slice(
+                  files[dir].length - 5,
+                  files[dir].length
+                )}
+              />
+            </div>
+          </div>
+        );
+      })}
+      <Outlet />
+    </section>
+  );
 }
 
 export default Index;
-

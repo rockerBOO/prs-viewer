@@ -4,13 +4,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export type Filename = string;
 
 export const current = createSlice({
-	name: "current",
-	initialState: "",
-	reducers: {
-		set: (_state, action: PayloadAction<Filename>) => {
-			return action.payload;
-		},
-	},
+  name: "current",
+  initialState: "",
+  reducers: {
+    set: (_state, action: PayloadAction<Filename>) => {
+      return action.payload;
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function

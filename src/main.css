@@ -187,7 +187,7 @@ input.query {
   display: grid;
   grid-gap: 0.3em;
   justify-content: center;
-	margin: 4px;
+  margin: 4px;
   position: fixed;
   left: 0;
   top: 0;
@@ -197,7 +197,7 @@ input.query {
 }
 
 .search img {
-	max-height: 30vh;
+  max-height: 30vh;
 }
 
 .search form {
@@ -208,7 +208,7 @@ input.query {
 }
 
 .search .result {
-	display: flex;
-	justify-content: center;
-	margin: 0.3em;
+  display: flex;
+  justify-content: center;
+  margin: 0.3em;
 }

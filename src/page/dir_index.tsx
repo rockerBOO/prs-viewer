@@ -5,91 +5,90 @@ import DirIndex from "../dir_index";
 import { RootState } from "../store";
 
 const getLatest = (results: string[]): string[] =>
-	results
-		.filter((f) => {
-			return /^.*\.png/.test(f);
-		})
-		.reverse();
+  results
+    .filter((f) => {
+      return /^.*\.png/.test(f);
+    })
+    .reverse();
 
 const DirPage = () => {
-	let { dir } = useParams();
-	const { filesInDir, files, dirs } = useSelector((state: RootState) => ({
-		filesInDir: dir ? state.files[dir] ?? [] : [],
-		files: state.files,
-		dirs: Object.keys(state.files),
-		settings: state.settings ?? {},
-	}));
+  let { dir } = useParams();
+  const { filesInDir, files, dirs } = useSelector((state: RootState) => ({
+    filesInDir: dir ? state.files[dir] ?? [] : [],
+    files: state.files,
+    dirs: Object.keys(state.files),
+    settings: state.settings ?? {},
+  }));
 
-	useEffect(() => {
-		setTimeout(() => {
-			window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-		}, 100);
-	}, [dir]);
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }, 100);
+  }, [dir]);
 
-	const images = getLatest(filesInDir as string[]);
+  const images = getLatest(filesInDir as string[]);
 
-	if (images.length === 0) {
-		return <div>Empty</div>;
-	}
+  if (images.length === 0) {
+    return <div>Empty</div>;
+  }
 
-	return (
-		<>
-			<Outlet />
-			<h1>{dir}</h1>
-			<DirIndex dir={dir} files={images} />
-		</>
-	);
+  return (
+    <>
+      <Outlet />
+      <h1>{dir}</h1>
+      <DirIndex dir={dir} files={images} />
+    </>
+  );
 };
 
 export const arrowControls = () => {
-	const handler = (e: KeyboardEvent) => {
-		if (e.key === "ArrowLeft") {
-			// const x = files.find((file) => {
-			//   const found = findFileIter(file);
-			//
-			//   if (found && iter) {
-			//     return iter - 1 === found;
-			//   }
-			//
-			//   return false;
-			// });
-			//
-			// if (x) {
-			//   setIter(findFileIter(x));
-			//   const file = findFileName(x);
-			//   console.log("prev", file);
-			//   navigate(`/dir/${dir}/${file}`);
-			// }
-		}
+  const handler = (e: KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      // const x = files.find((file) => {
+      //   const found = findFileIter(file);
+      //
+      //   if (found && iter) {
+      //     return iter - 1 === found;
+      //   }
+      //
+      //   return false;
+      // });
+      //
+      // if (x) {
+      //   setIter(findFileIter(x));
+      //   const file = findFileName(x);
+      //   console.log("prev", file);
+      //   navigate(`/dir/${dir}/${file}`);
+      // }
+    }
 
-		if (e.key === "ArrowRight") {
-			// const x = files.find((file) => {
-			//   const found = findFileIter(file);
-			//
-			//   if (found && iter) {
-			//     return iter + 1 === found;
-			//   }
-			//
-			//   return false;
-			// });
-			//
-			// console.log("next", x);
-			//
-			// if (x) {
-			//   setIter(findFileIter(x));
-			//   const file = findFileName(x);
-			//   console.log("next", file);
-			//   navigate(`/dir/${dir}/${file}`);
-			// }
-		}
-	};
+    if (e.key === "ArrowRight") {
+      // const x = files.find((file) => {
+      //   const found = findFileIter(file);
+      //
+      //   if (found && iter) {
+      //     return iter + 1 === found;
+      //   }
+      //
+      //   return false;
+      // });
+      //
+      // console.log("next", x);
+      //
+      // if (x) {
+      //   setIter(findFileIter(x));
+      //   const file = findFileName(x);
+      //   console.log("next", file);
+      //   navigate(`/dir/${dir}/${file}`);
+      // }
+    }
+  };
 
-	window.addEventListener("keyup", handler);
+  window.addEventListener("keyup", handler);
 
-	return function cleanup() {
-		window.removeEventListener("keyup", handler);
-	};
+  return function cleanup() {
+    window.removeEventListener("keyup", handler);
+  };
 };
 
 export default DirPage;
-
