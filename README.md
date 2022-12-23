@@ -82,11 +82,22 @@ And can set the frontend to use these new endpoints. Can also be hosted elsewher
 have a static frontend (no need to run in development or make new builds when you change endpoints)
 
 ```
-http://localhost:5173/analog?wshost=localhost:9000&httphost=localhost:3000
+http://localhost:5173/?wshost=localhost:9000&httphost=localhost:3000
 ```
 
 This sets the values on load, so if you reload you'll need these values set again. Ideally we save the configuration to
 local storage, so it stays consistent but then requires an easy way to reset it if required.
+
+## Search
+
+Work is being made to add search. A [rust HTTP search server - prs-search](https://git.sr.ht/~rockerboo/prs-search)
+with fulltext which indexes PRS json files for their settings.
+
+Right now the host and port are hard coded, but you can configure the address in the url params.
+
+```
+http://localhost:5173/?searchhost=localhost:3030
+```
 
 ## Controls
 
