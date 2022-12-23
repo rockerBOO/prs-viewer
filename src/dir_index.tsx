@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { Dir } from "./files";
@@ -16,9 +16,27 @@ const findFileIter = (file: string): number | undefined => {
 	return undefined;
 };
 
+type State = { [key: string]: string };
+type Action = { type: "add"; payload: [string, string] };
+
 const DirIndex = ({ dir, files }: { dir?: string; files: Dir }) => {
 	const [filePath, setFilePath] = useState<GetFilePath>(() => getFilePath);
 
+	const [filesSettings, dispatch] = useReducer<
+		(state: State, action: Action) => State,
+		State
+	>(
+		(state, action) => {
+			switch (action.type) {
+				case "add":
+					return { ...state, ...{ [action.payload[0]]: action.payload[1] } };
+				default:
+					return state;
+			}
+		},
+		{},
+		(_state) => ({}),
+	);
 	const settings = useSelector((state: RootState) => {
 		return state.settings;
 	});
@@ -38,7 +56,7 @@ const DirIndex = ({ dir, files }: { dir?: string; files: Dir }) => {
 					<div key={`${dir}-${file}`} style={{ width: "100%" }}>
 						<Link
 							to={`/${dir}/${file.replace(".png", "").replace(`${dir}-`, "")}`}
-							>
+						>
 							<img
 								src={filePath({ dir, file: file.replace(".png", "") })}
 								data-json={`${HTTP_HOST}/${dir}/${file}.json`}

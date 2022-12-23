@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet } from "react-router-dom";
-import { getFilePath } from "./lib";
+import { isSearchEnabled } from "./main";
+import Search from "./search";
 import { set } from "./settings";
 import { RootState } from "./store";
+import GotoTop from "./top";
 
 const Settings = () => {
 	const settings = useSelector((state: RootState) => {
@@ -32,7 +33,6 @@ const Settings = () => {
 };
 
 const App = () => {
-
 	return (
 		<main>
 			<header>
@@ -40,6 +40,8 @@ const App = () => {
 				<nav>
 					<Link to="/">Index</Link>
 					<Settings />
+					{isSearchEnabled && <Search />}
+					<GotoTop />
 				</nav>
 			</header>
 			<Outlet />

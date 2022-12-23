@@ -27,20 +27,31 @@ export function getSettingsPath({ dir = "", file = "" }: FileOptions) {
 }
 
 export const getHTTPHost = () => {
-	const params = new URLSearchParams(window.location.search);
-	if (params.get("httphost")) {
-		const protocol = window.location.protocol;
-		return `${protocol}://${params.get("httphost")}`;
-	}
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("httphost")) {
+    const protocol = window.location.protocol;
+    return `${protocol}//${params.get("httphost")}`;
+  }
 
-	return "http://localhost:3000";
+  return "http://localhost:3000";
 };
 
 export const getWSHost = () => {
-	const params = new URLSearchParams(window.location.search);
-	if (params.has("wshost")) {
-		return `ws://${params.get("wshost")}`;
-	}
+  const params = new URLSearchParams(window.location.search);
+  if (params.has("wshost")) {
+    return `ws://${params.get("wshost")}`;
+  }
 
-	return "ws://localhost:8999";
+  return "ws://localhost:8999";
+};
+
+export const getSearchHost = () => {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.has("wshost")) {
+    const protocol = window.location.protocol;
+    return `${protocol}//${params.get("searchhost")}`;
+  }
+
+  return "http://localhost:3030";
 };

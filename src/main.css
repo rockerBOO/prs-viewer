@@ -7,7 +7,7 @@ body {
   color: white;
   margin: 0;
   font-family: monospace;
-	font-size: 1rem;
+  font-size: 1rem;
 }
 
 a {
@@ -112,7 +112,7 @@ main header nav {
   display: grid;
   justify-content: center;
   align-items: center;
-  background-color: hsla(175, 0%, 0%, 0.95);
+  background-color: hsla(175, 0%, 0%, 0.98);
   cursor: pointer;
 }
 
@@ -168,4 +168,47 @@ button:focus {
   outline: 3px solid white;
   cursor: pointer;
   color: white;
+}
+
+input.query {
+  border: 0.3em solid black;
+  background-color: black;
+  color: white;
+  background-color: black;
+  border: 2px solid black;
+  font-family: monospace;
+  min-height: 2em;
+  min-width: 6em;
+  transition: 256ms ease-in-out all;
+  font-size: 1em;
+}
+
+.search {
+  display: grid;
+  grid-gap: 0.3em;
+  justify-content: center;
+	margin: 4px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  max-height: 90vh;
+  background: hsla(175, 0%, 0%, 0.95);
+  overflow: auto;
+}
+
+.search img {
+	max-height: 30vh;
+}
+
+.search form {
+  padding: 0.3em;
+  display: flex;
+  grid-gap: 0.3em;
+  /* justify-content: center; */
+}
+
+.search .result {
+	display: flex;
+	justify-content: center;
+	margin: 0.3em;
 }

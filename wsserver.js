@@ -56,7 +56,7 @@ try {
       });
   });
 
-  console.log(`Watching for changes to ${PRS_OUT}`);
+	console.log(`Watching: ${PRS_OUT}`);
   console.log(`Listening on ws://localhost:${LISTENING_PORT}`);
 } catch (e) {
   console.error(e);

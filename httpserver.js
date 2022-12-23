@@ -65,4 +65,5 @@ app.get("/settings/:dir/:file", (req, res) => {
 
 app.listen(PRS_HTTP_PORT);
 
+console.log(`Serving: ${PRS_OUT}`);
 console.log(`Listening on http://localhost:${PRS_HTTP_PORT}`);

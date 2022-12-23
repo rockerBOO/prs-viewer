@@ -21,7 +21,9 @@ const DirPage = () => {
 	}));
 
 	useEffect(() => {
-		window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+		setTimeout(() => {
+			window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+		}, 100);
 	}, [dir]);
 
 	const images = getLatest(filesInDir as string[]);

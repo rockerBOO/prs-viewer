@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetPath, getFilePath } from "./lib";
-import { getFilePath as prs_getFilePath, getSettingsPath as prs_getSettingPath } from "./prs";
+import {
+	getFilePath as prs_getFilePath,
+	getSettingsPath as prs_getSettingPath,
+} from "./prs";
 import { HTTP_HOST } from "./main";
+import Tippy from "@tippyjs/react";
 
 // IDEA
 // For configuring location of images and directories
@@ -31,7 +35,9 @@ export const File = () => {
 	const navigate = useNavigate();
 	const [settings, setSettings] = useState<Settings>({});
 	const [filePath, setFilePath] = useState<GetPath>(() => prs_getFilePath);
-	const [settingPath, setSettingPath] = useState<GetPath>(() => prs_getSettingPath);
+	const [settingPath, setSettingPath] = useState<GetPath>(
+		() => prs_getSettingPath,
+	);
 
 	useEffect(() => {
 		const fileModal = document.getElementById("file-modal");
@@ -119,20 +125,40 @@ export const File = () => {
 						textAlign: "center",
 					}}
 				>
-					{settings?.prompt ?? "Prompt"}
+					<Tippy content="Prompt">
+						<span>{settings?.prompt ?? "Prompt"}</span>
+					</Tippy>
 				</div>
 				<div
 					style={{
 						pointerEvents: "all",
 						padding: ".3em",
 						opacity: 0.5,
+						display: "flex",
+						gap: "2em",
+						justifyContent: "space-around",
 					}}
 				>
-					<span>
-						{settings?.steps ?? "-"} {settings?.scale} {settings?.variance}{" "}
-						{settings?.seed} {settings?.init_strength?.toPrecision(3)}{" "}
-						{settings?.init_image}
-					</span>
+					<>
+						<Tippy content="steps">
+							<span>{settings?.steps ?? "-"}</span>
+						</Tippy>{" "}
+						<Tippy content="scale">
+							<span>{settings?.scale}</span>
+						</Tippy>
+						<Tippy content="variance">
+							<span> {settings?.variance}</span>
+						</Tippy>
+						<Tippy content="seed">
+							<span> {settings?.seed} </span>
+						</Tippy>
+						<Tippy content="init_stength">
+							<span>{settings?.init_strength?.toPrecision(3)}</span>
+						</Tippy>
+						<Tippy content="init_image">
+							<span>{settings?.init_image}</span>
+						</Tippy>
+					</>
 				</div>
 				<div
 					style={{
@@ -140,14 +166,30 @@ export const File = () => {
 						padding: ".3em",
 
 						opacity: 0.5,
+
+						display: "flex",
+						gap: "2em",
+						justifyContent: "space-around",
 					}}
 				>
-					<span>
-						{settings?.width ?? "-"} {settings?.height} {settings?.n_iter}{" "}
-						{settings?.method} {settings?.checkpoint}
-					</span>
+					<>
+						<Tippy content="width">
+							<span>{settings?.width ?? "-"}</span>
+						</Tippy>
+						<Tippy content="height">
+							<span>{settings?.height}</span>
+						</Tippy>
+						<Tippy content="n_iter">
+							<span>{settings?.n_iter}</span>
+						</Tippy>{" "}
+						<Tippy content="method">
+							<span>{settings?.method}</span>
+						</Tippy>
+						<Tippy content="checkpoint">
+							<span>{settings?.checkpoint}</span>
+						</Tippy>
+					</>
 				</div>
-				<div>{settings?.init_image}</div>
 			</div>
 		</div>
 	);

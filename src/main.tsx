@@ -12,13 +12,17 @@ import { File } from "./file";
 import App from "./app";
 import { Provider } from "react-redux";
 import "./main.css";
+import 'tippy.js/dist/tippy.css'; 
 import { add, addBatch } from "./files";
 import DirPage from "./page/dir_index";
-import { getHTTPHost, getWSHost } from "./lib";
+import { getHTTPHost, getSearchHost, getWSHost } from "./lib";
 
 // Configure your endpoints
 export const HTTP_HOST = getHTTPHost();
 export const WS_HOST = getWSHost();
+export const SEARCH_HOST = getSearchHost();
+
+export const isSearchEnabled = true;
 
 // Web socket connection
 // -=-=-=-=-=-=-=-=-=-=-
@@ -45,7 +49,7 @@ try {
 		}
 	});
 
-	webSocket.addEventListener("message", (ev: { data: string }) => {
+	webSocket.addEventListener("message", async (ev: { data: string }) => {
 		const { event, dir, file, files } = JSON.parse(ev.data) as {
 			event: "add" | "addBatch" | "change";
 			dir: string;
